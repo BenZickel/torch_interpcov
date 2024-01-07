@@ -15,12 +15,15 @@ class InterpolateCovariance(pt.nn.Module):
         >>> from InterpolateCovariance import InterpolateCovariance
         >>> x = pt.Tensor([1, 2, 3, 4])
         >>> xi = pt.Tensor([0.1, 1.2, 3.6])
-        >>> interp_cov = InterpolateCovariance(x,xi, add_zero=True)
+        >>> interp_cov = InterpolateCovariance(x, xi, add_zero=True)
         >>> cov = pt.randn(4, 4)
         >>> cov = pt.matmul(cov, cov.t())
         >>> covi = interp_cov(cov)
         >>> print(cov.shape, covi.shape)
         torch.Size([4, 4]) torch.Size([3, 3])
+        >>> e = pt.linalg.eig(covi).eigenvalues
+        >>> all(e.imag == 0) and all(e.real > 0)
+        True
     '''
 
     def __init__(self, x, xi, add_zero=False):
